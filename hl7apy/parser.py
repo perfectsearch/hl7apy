@@ -19,6 +19,7 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import absolute_import
 import re
 import sys
 
@@ -28,6 +29,11 @@ from hl7apy.consts import N_SEPS
 from hl7apy.core import is_base_datatype, Message, Group, Segment, Field, Component, SubComponent
 from hl7apy.exceptions import InvalidName, ParserError, InvalidEncodingChars, MessageProfileNotFound
 from hl7apy.validation import Validator
+
+try:
+    xrange = xrange
+except NameError:
+    xrange = range
 
 
 if sys.version_info[0] <= 2:

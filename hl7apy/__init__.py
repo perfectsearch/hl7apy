@@ -19,15 +19,15 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import print_function
+from __future__ import absolute_import, print_function
+
 import os
 import sys
 import collections
 import importlib
-
-if sys.version_info[0] <= 2:
+try:
     import cPickle as pickle
-else:
+except ImportError:
     import pickle
 
 from hl7apy.exceptions import UnsupportedVersion, InvalidEncodingChars, UnknownValidationLevel
@@ -134,12 +134,10 @@ def set_default_validation_level(validation_level):
     :param validation_level: validation level (see :class:`hl7apy.consts.VALIDATION_LEVEL`)
     :raises: :exc:`hl7apy.exceptions.UnknownValidationLevel` if the given validation level is unsupported
 
-    >>> from hl7apy.exceptions import UnknownValidationLevel
-    >>> try:
-    ...     set_default_validation_level(3)
-    ...     raise AssertionError('UnknownValidationLevel exception was not raised')
-    ... except UnknownValidationLevel as ex:
-    ...     pass
+    >>> set_default_validation_level(3)  # doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+        ...
+    UnknownValidationLevel
     >>> set_default_validation_level(VALIDATION_LEVEL.TOLERANT)
     >>> print(get_default_validation_level())
     2

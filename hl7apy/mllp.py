@@ -19,6 +19,9 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 import re
 import socket
 try:
@@ -50,28 +53,31 @@ class InvalidHL7Message(HL7apyException):
 
 
 class _MLLPRequestHandler(StreamRequestHandler):
+    encoding = 'utf-8'
+
     def __init__(self, *args, **kwargs):
         StreamRequestHandler.__init__(self, *args, **kwargs)
 
     def setup(self):
-        self.sb = u"\x0b"
-        self.eb = u"\x1c"
-        self.cr = u"\x0d"
-        self.validator = re.compile(self.sb + u"(([^\r]+\r)*([^\r]+\r?))" + self.eb + self.cr)
+        self.sb = b"\x0b"
+        self.eb = b"\x1c"
+        self.cr = b"\x0d"
+        self.validator = re.compile(
+            ''.join([self.sb.decode('ascii'), r"(([^\r]+\r)*([^\r]+\r?))", self.eb.decode('ascii'), self.cr.decode('ascii')]))
         self.handlers = self.server.handlers
         self.timeout = self.server.timeout
 
         StreamRequestHandler.setup(self)
 
     def handle(self):
-        end_seq = "{}{}".format(self.eb, self.cr)
+        end_seq = self.eb + self.cr
         try:
             line = self.request.recv(3).decode()
         except socket.timeout:
             self.request.close()
             return
 
-        if line[0] != self.sb:  # First MLLP char
+        if line[:1] != self.sb:  # First MLLP char
             self.request.close()
             return
 
@@ -85,7 +91,7 @@ class _MLLPRequestHandler(StreamRequestHandler):
                 self.request.close()
                 return
 
-        message = self._extract_hl7_message(line)
+        message = self._extract_hl7_message(line.decode(self.encoding))
         if message is not None:
             try:
                 response = self._route_message(message)
@@ -93,7 +99,7 @@ class _MLLPRequestHandler(StreamRequestHandler):
                 self.request.close()
             else:
                 # encode the response
-                self.wfile.write(response.encode())
+                self.wfile.write(response.encode(self.encoding))
         self.request.close()
 
     def _extract_hl7_message(self, msg):

@@ -19,13 +19,15 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import print_function
+from __future__ import absolute_import, print_function
+
 import sys
 import os
 import re
 from optparse import OptionParser
 from lxml import objectify
 import pprint
+from hl7apy.utils import iteritems
 
 
 if sys.version_info[0] <= 2:

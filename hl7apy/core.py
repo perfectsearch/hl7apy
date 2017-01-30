@@ -23,6 +23,7 @@
 HL7apy - core classes
 """
 
+from __future__ import absolute_import
 import re
 import collections
 import datetime
@@ -56,6 +57,17 @@ from hl7apy.exceptions import ChildNotFound, ChildNotValid, \
 from hl7apy.factories import datatype_factory
 from hl7apy.base_datatypes import BaseDataType
 from hl7apy.consts import MLLP_ENCODING_CHARS
+from hl7apy.utils import iteritems
+
+try:
+    basestring = basestring
+except NameError:
+    basestring = (str, bytes)
+
+try:
+    xrange = xrange
+except NameError:
+    xrange = range
 
 
 def is_base_datatype(datatype, version=None):

@@ -20,6 +20,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+from __future__ import absolute_import
 class HL7apyException(Exception):
     """
     Base exception class for hl7apy
@@ -139,12 +140,10 @@ class UnknownValidationLevel(HL7apyException):
     It should be one of those defined in :class:`VALIDATION_LEVEL <hl7apy.consts.VALIDATION_LEVEL>`.
 
     >>> from hl7apy import set_default_validation_level
-    >>> from hl7apy.exceptions import UnknownValidationLevel
-    >>> try:
-    ...     set_default_validation_level(3)
-    ...     raise AssertionError('UnknownValidationLevel exception was not raised')
-    ... except UnknownValidationLevel as ex:
-    ...     pass
+    >>> set_default_validation_level(3)  # doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    ...
+    UnknownValidationLevel
     """
 
 
